@@ -1,7 +1,7 @@
 import flask
 from flask import Flask, render_template, request, redirect, url_for, flash, make_response, jsonify, send_file, abort
-import vk_callback_data.docs
-import vk_callback_data.tools
+from .vk_callback_data import docs as vk_docs
+from .vk_callback_data import tools as vk_tools
 
 import traceback
 
@@ -53,13 +53,13 @@ class server:
     
     def start(self, print_serverInfo=print, show_documentation=True, default_lang='ru'):
         global app
-        if default_lang not in vk_callback_data.docs.docs_info:
+        if default_lang not in vk_docs.docs_info:
             default_lang = 'en'
         flask.print = print_serverInfo
         if self.port is None:
-            vk_callback_data.docs.hostname = self.host
+            vk_docs.hostname = self.host
         else:
-            vk_callback_data.docs.hostname = f"http://{self.host}:{self.port}"
+            vk_docs.hostname = f"http://{self.host}:{self.port}"
         
         @app.route('/', methods=['GET', 'POST'])
         def get_docs_dl():
@@ -74,10 +74,10 @@ class server:
             if not(show_documentation):
                 return abort(404)
             
-            if lang not in vk_callback_data.docs.docs_info:
+            if lang not in vk_docs.docs_info:
                 return redirect('/documentation/%s' % default_lang)
             else:
-                return vk_callback_data.docs.docs_info[lang]
+                return vk_docs.docs_info[lang]
         
         @app.route('/<group_id>', methods=['GET', 'POST'])
         def upload_event(group_id):
@@ -85,7 +85,7 @@ class server:
                 if int(group_id) in self.group_dict:
                     POST_DATA = request.json
                     # print(POST_DATA)
-                    if 'event_id' in vk_callback_data.tools.repl_to_dict(POST_DATA) and 'secret' in vk_callback_data.tools.repl_to_dict(POST_DATA):
+                    if 'event_id' in vk_tools.repl_to_dict(POST_DATA) and 'secret' in vk_tools.repl_to_dict(POST_DATA):
                         if 'object' in POST_DATA:
                             event_object = vk_event(
                                 type=POST_DATA['type'],
