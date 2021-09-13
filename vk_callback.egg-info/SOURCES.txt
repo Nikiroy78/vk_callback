@@ -1,0 +1,8 @@
+setup.cfg
+setup.py
+vk_callback/__init__.py
+vk_callback.egg-info/PKG-INFO
+vk_callback.egg-info/SOURCES.txt
+vk_callback.egg-info/dependency_links.txt
+vk_callback.egg-info/not-zip-safe
+vk_callback.egg-info/top_level.txt
