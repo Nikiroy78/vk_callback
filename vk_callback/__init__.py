@@ -237,9 +237,10 @@ class server:
         if Event.secret != group_obj.secret_key:
             return "Invalid secret key"
         elif Event.type == 'confirmation':
+            return group_obj.return_str
+        else:
             self.event(group_obj, Event)
             return 'ok'
-            return group_obj.return_str
     
     def event(self, group_obj, Event):
         return group_obj.return_str
