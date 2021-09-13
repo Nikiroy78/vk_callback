@@ -43,8 +43,9 @@ class server:
     def confirmation_secret(self, group_obj, Event):
         if Event.secret != group_obj.secret_key:
             return "Invalid secret key"
-        else:
+        elif Event.type == 'confirmation':
             self.event(group_obj, Event)
+            return 'ok'
             return group_obj.return_str
     
     def event(self, group_obj, Event):
@@ -85,13 +86,22 @@ class server:
                     POST_DATA = request.json
                     # print(POST_DATA)
                     if 'event_id' in vk_callback_data.tools.repl_to_dict(POST_DATA) and 'secret' in vk_callback_data.tools.repl_to_dict(POST_DATA):
-                        event_object = vk_event(
-                            type=POST_DATA['type'],
-                            object=POST_DATA['object'],
-                            group_id=POST_DATA['group_id'],
-                            event_id=POST_DATA['event_id'],
-                            secret=POST_DATA['secret']
-                        )
+                        if 'object' in POST_DATA:
+                            event_object = vk_event(
+                                type=POST_DATA['type'],
+                                object=POST_DATA['object'],
+                                group_id=POST_DATA['group_id'],
+                                event_id=POST_DATA['event_id'],
+                                secret=POST_DATA['secret']
+                            )
+                        else:
+                            event_object = vk_event(
+                                type=POST_DATA['type'],
+                                object=None,
+                                group_id=POST_DATA['group_id'],
+                                event_id=POST_DATA['event_id'],
+                                secret=POST_DATA['secret']
+                            )
                         return self.confirmation_secret(self.group_dict[int(group_id)], Event=event_object)
                     else:
                         return "It's request not from vk.com, go away!"
