@@ -1,4 +1,4 @@
 # vk_callback
-```bash
+```pip
 pip install vk_callback
 ```
